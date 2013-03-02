@@ -2,10 +2,44 @@
 using namespace std; 
 
 
-bool debug = true; 
-bool sinSoluciones = false; 
-bool solucionesInfinitas = false; 
-string tag = "DEBUG::";
+
+
+
+
+
+
+class Montante{
+	private: 
+		double matrizAumentada[11][11];//11 es el número máximo de ecuaciones aceptadas y 10 es el número máximo de variables aceptadas. 
+		int filas; 
+		int columnas;
+		double soluciones[11]; 
+		
+		string tag = "DEBUG::"; //tag de los mensajes
+		bool debug; //si este boolean es verdadero, se desplieagan mensajes con el procedimiento
+		bool sinSoluciones; //si al final de montante, quedan ecuaciones con soluciones distintas
+		bool solucionesInfinitas; //si al final de montante, quedan ecuaciones que den la misma solución 
+		
+
+		double pivAnterior; 
+		double pivActual; //el valor en la posición kk de la matriz
+		int k; //el índice que se utilizará para moverse por la diagonal principal
+	
+	public:
+		Montante(double m[11][11], int f, int c);
+		Montante(double m[11][11], int f, int c, true);//se inicializa en true el valor de debug para mostrar el proceso
+		
+		void MetodoPrincipal();//ciclo principal de montante
+		
+		void conversionACeros();//convierte a 0s todo antes del índice en donde esté menos la diagonal principal
+		void operacionesEnPrimerCuadrante();//realiza las operaciones del primer cuadrante
+		void operacionesEnSegundoCuadrante();//realiza las operaciones del cuarto cuadrante
+		
+		void calcularSolucion(); //en el caso de que se esté usando un sistema de ecuaciones lineales con montante
+		void calcularInversa(); //en el caso de que se haya usado montante para calcular la inversa de una matriz
+};
+
+
 
 void imprimirMatriz(double m[11][11], int filas, int columnas){
 	for(int f = 0; f<filas; f++){
@@ -17,82 +51,9 @@ void imprimirMatriz(double m[11][11], int filas, int columnas){
 }
 
 
-void montante(double matriz[11][11], int vars, int numE, double soluciones[11]){
-	int k = 0; 
-	double pAnterior = 1, pActual; 
-	int k_temp = 0; 
-	double filTemp; 
-	while(k<vars && !sinSoluciones && !solucionesInfinitas){
-		pActual = matriz[k][k];
-		//sustituyo por 0s o por el valor de la matriz en kk
-		for(int f = 0; f<=k; f++){
-			for(int c = 0; c<=k; c++){
-				if(f==c)	
-					matriz[f][c] = matriz[k][k];
-				else
-					matriz[f][c] = 0;
-			}
-		}
-		if(debug){
-			cout<<tag<<"Poniendo 0s"<<endl;
-			imprimirMatriz(matriz, numE, vars+1); 
-		}
-		//calculo los valores faltantes
-		for(int f = 0; f<numE; f++){
-			if(f!=k){//se brinca la fila k
-				for(int c = k+1; c<vars+1;  c++){//empieza después de la columna k
-					
-					if(k<f){
-						//estoy en el cuadrante 4
-						matriz[f][c] = (pActual*matriz[f][c]-matriz[k][c]*matriz[f][k])/pAnterior;
-					}else{
-						//estoy en el cuadrante 1
-						matriz[f][c] = (matriz[k][c]*matriz[f][k]-matriz[f][c]*pActual)*(-1)/pAnterior;
-					}
-					
-				}
-			}
-		}
-		if(debug){
-			cout<<tag<<"Valores calculados"<<endl;
-			imprimirMatriz(matriz, numE, vars+1); 
-		}
-		//aquí tengo que escoger los pivotes, y verificar que el pivote actual no sea 0; 
-		pAnterior = pActual; 
-		k++;
-		/*
-		k_temp = k; 
-		//qué pasa si el último es 0
-		while(matriz[k][k_temp]==0 && k<numE){
-			k++;
-		}
-		if(matriz[k][k_temp]==0){
-			//todas empiezan con 0 desde k, inclusive. 
-			//no puedo seguir con el proceso
-			//tengo que escoger si me va a dar a número infinito de soluciones o qué
-			k = k_temp; 
-			if(k == numE)
-				sinSoluciones = true; 
-			else{
-				//comparar renglones, y si hay dos soluciones iguales, es número infinito
-				solucionesInfinitas = true; 
-			}
-		}else{
-			//cambio de filas
-			//cambio la fila k_temp por la fila k
-			for(int c = 0; c<vars+1; c++){
-				filTemp = matriz[k_temp][c];
-				matriz[k_temp][c] = matriz[k][c];
-				matriz[k][c] = filTemp; 
-			}
-		}
-		*/
-		
-	}//fin del while de montante
-}
 
 int main(){
-	double matrizExtendida[11][11];
+	
 	int casos, variables, numEcuaciones; 
 	cin>>casos; 
 	while(casos>0){
@@ -111,8 +72,6 @@ int main(){
 			}
 			
 		}
-		
-		montante(matrizExtendida, variables, numEcuaciones, soluciones); 
 		
 		//Imprimir la respuesta. 
 		if(sinSoluciones){
