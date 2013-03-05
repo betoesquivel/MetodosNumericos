@@ -19,8 +19,8 @@ class Montante{
 		int k; //el índice que se utilizará para moverse por la diagonal principal
 	
 	public:
-		Montante(double m[11][11], int f, int c);
-		Montante(double m[11][11], int f, int c, bool);//se inicializa en bool el valor de debug para mostrar el proceso
+		Montante(double** m, int f, int c);
+		Montante(double** m, int f, int c, bool);//se inicializa en bool el valor de debug para mostrar el proceso
 		
 		void MetodoPrincipal();//ciclo principal de montante
 		
@@ -40,7 +40,7 @@ class Montante{
 		void imprimirMatriz();
 };
 
-		Montante::Montante(double m[11][11], int f, int c){
+		Montante::Montante(double** m, int f, int c){
 			for(int fila = 0; fila<f; fila++){
 				for(int columna = 0; columna<c; columna++)
 					matriz[f][c] = m[f][c];
@@ -53,12 +53,7 @@ class Montante{
 			sinSoluciones = false; 
 			solucionesInfinitas = false; 
 		}
-		Montante::Montante(double m[11][11], int f, int c, bool deb){//se inicializa en bool el valor de debug para mostrar el proceso
-			for(int fila = 0; fila<f; fila++){
-				for(int columna = 0; columna<c; columna++)
-					matriz[f][c] = m[f][c];
-			}
-			
+		Montante::Montante(double** m, int f, int c, bool deb){//se inicializa en bool el valor de debug para mostrar el proceso
 			filas = f;
 			columnas = c;
 			debug = true; 
@@ -66,7 +61,20 @@ class Montante{
 			pivAnterior = 1; 
 			sinSoluciones = false; 
 			solucionesInfinitas = false; 
+			
+			for(int fila = 0; fila<f; fila++){
+				for(int columna = 0; columna<c; columna++){
+					matriz[f][c] = m[f][c];
+					if(debug){
+						cout<<tag<<"Copiando"<<endl; 
+						cout<<m[f][c];
+					}
+				}
+			}
+			
+			
 		}
+		
 		bool Montante::getSinSoluciones(){
 			return sinSoluciones;
 		}
