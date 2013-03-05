@@ -1,12 +1,13 @@
 #include <iostream>
 using namespace std; 
 string tag = "DEBUG::";
+const int size = 11; 
 class Montante{
 	private: 
-		double matriz[11][11];//11 es el número máximo de ecuaciones aceptadas y 10 es el número máximo de variables aceptadas. 
+		double matriz[size][size];//11 es el número máximo de ecuaciones aceptadas y 10 es el número máximo de variables aceptadas. 
 		int filas; 
 		int columnas;
-		double soluciones[11]; 
+		double soluciones[size]; 
 		
 		 //tag de los mensajes
 		bool debug; //si este boolean es verdadero, se desplieagan mensajes con el procedimiento
@@ -19,8 +20,8 @@ class Montante{
 		int k; //el índice que se utilizará para moverse por la diagonal principal
 	
 	public:
-		Montante(double** m, int f, int c);
-		Montante(double** m, int f, int c, bool);//se inicializa en bool el valor de debug para mostrar el proceso
+		Montante(double m[size][size], int f, int c);
+		Montante(double m[size][size], int f, int c, bool);//se inicializa en bool el valor de debug para mostrar el proceso
 		
 		void MetodoPrincipal();//ciclo principal de montante
 		
@@ -40,7 +41,7 @@ class Montante{
 		void imprimirMatriz();
 };
 
-		Montante::Montante(double** m, int f, int c){
+		Montante::Montante(double m[size][size], int f, int c){
 			for(int fila = 0; fila<f; fila++){
 				for(int columna = 0; columna<c; columna++)
 					matriz[f][c] = m[f][c];
@@ -53,7 +54,7 @@ class Montante{
 			sinSoluciones = false; 
 			solucionesInfinitas = false; 
 		}
-		Montante::Montante(double** m, int f, int c, bool deb){//se inicializa en bool el valor de debug para mostrar el proceso
+		Montante::Montante(double m[size][size], int f, int c, bool deb){//se inicializa en bool el valor de debug para mostrar el proceso
 			filas = f;
 			columnas = c;
 			debug = true; 
@@ -189,7 +190,7 @@ class Montante{
 
 
 int main(){
-	double matrizExtendida[11][11];
+	double matrizExtendida[size][size];
 	int casos, variables, numEcuaciones; 
 	cin>>casos; 
 	while(casos>0){
@@ -199,11 +200,14 @@ int main(){
 		cout<<"Ecuaciones: "<<endl;
 		cin>>numEcuaciones; 
 		
+		double temp; 
 		//llenar la matriz extendida fila por fila
 		for(int f = 0; f<numEcuaciones; f++){
 			
 			for(int c = 0; c<variables+1;  c++){
-				cin>>matrizExtendida[f][c];
+				cin>>temp;
+				cout<<"Solo probando"<<temp<<endl; 
+				matrizExtendida[f][c] = temp;
 			}
 			
 		}
