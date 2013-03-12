@@ -31,7 +31,7 @@ double pivActual;
 		//convierte a 0s todo antes del índice en donde esté menos la diagonal principal
 		void conversionACeros(){
 			for(int f = 0; f<filas; f++){
-				for(int c = 0; c<k; c++){
+				for(int c = 0; c<=k; c++){
 					if(f!=c)
 						matriz[f][c] = 0;
 					else
@@ -103,10 +103,10 @@ double pivActual;
     
 			while(!sinSoluciones && !solucionesInfinitas && k<filas){
 				pivActual = matriz[k][k];
-				conversionACeros();
+				
 				operacionesEnPrimerCuadrante();
 				operacionesEnSegundoCuadrante();
-				
+				conversionACeros();
 				//esojo la siguiente fila y cambio la k; 
 				pivAnterior = pivActual; 
 				k++;
@@ -116,6 +116,7 @@ double pivActual;
 				}
 				if(matriz[sigFila][k]==0){
 					//sin solución o soluciones infinitas	
+					
 				}else{
 					//cambio el renglón k, por el renglón sigFila en la matriz	
 					cambiarRenglones(sigFila, k); 
