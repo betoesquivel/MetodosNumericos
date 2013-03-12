@@ -3,41 +3,30 @@
 using namespace std;
 
 const int tamMat = 11;
+string tag = "DEBUG::";
+bool debug = true; 
+
 double matriz[tamMat][tamMat];
+double soluciones[tamMat];
 int columnas;
 int filas;
 
 bool sinSoluciones = false;
 bool solucionesInfinitas = false;
-int k = 0,
+int k = 0;
 double pivAnterior = 1;
 double pivActual; 
 
-
-    	void MetodoPrincipal(){
-    
-			while(!sinSoluciones && !solucionesInfinitas && k<filas){
-				pivActual = matriz[k][k];
-				conversionACeros();
-				operacionesEnPrimerCuadrante();
-				operacionesEnSegundoCuadrante();
-				
-				//esojo la siguiente fila y cambio la k; 
-				pivAnterior = pivActual; 
-				k++;
-				int sigFila = k; 
-				while(matriz[sigFila][k]==0 && sigFila<filas){
-					sigFila++;
+		void imprimirMatriz(){
+			for(int f = 0; f<filas; f++){
+				for(int c = 0; c<columnas;  c++){
+					cout<<matriz[f][c]<<" ";
 				}
-				if(matriz[sigFila][k]==0){
-					//sin solución o soluciones infinitas	
-				}else{
-					//cambio el renglón k, por el renglón sigFila en la matriz	
-					cambiarRenglones(sigFila, k); 
-				}
-				
+				cout<<endl; 
 			}
+			cout<<endl; 
 		}
+
 		
 		//convierte a 0s todo antes del índice en donde esté menos la diagonal principal
 		void conversionACeros(){
@@ -99,22 +88,41 @@ double pivActual;
 			}
 		}
 		
+		void imprimirSoluciones(){
+			for(int i = 0; i<filas; i++){
+				cout<<"x"<<i+1<<" = "<<soluciones[i]<<endl; 
+			}
+		}
 		//en el caso de que se haya usado montante para calcular la inversa de una matriz
 
 		void calcularInversa(){
 			//luego lo hago
-		}		
-		void imprimirMatriz(){
-			for(int f = 0; f<filas; f++){
-				for(int c = 0; c<columnas;  c++){
-					cout<<matriz[f][c]<<" ";
+		}	
+		
+    	void MetodoPrincipal(){
+    
+			while(!sinSoluciones && !solucionesInfinitas && k<filas){
+				pivActual = matriz[k][k];
+				conversionACeros();
+				operacionesEnPrimerCuadrante();
+				operacionesEnSegundoCuadrante();
+				
+				//esojo la siguiente fila y cambio la k; 
+				pivAnterior = pivActual; 
+				k++;
+				int sigFila = k; 
+				while(matriz[sigFila][k]==0 && sigFila<filas){
+					sigFila++;
 				}
-				cout<<endl; 
+				if(matriz[sigFila][k]==0){
+					//sin solución o soluciones infinitas	
+				}else{
+					//cambio el renglón k, por el renglón sigFila en la matriz	
+					cambiarRenglones(sigFila, k); 
+				}
+				
 			}
-			cout<<endl; 
 		}
-
-
 
 int main(){
 	int casos, variables, numEcuaciones; 
@@ -132,24 +140,25 @@ int main(){
 			
 			for(int c = 0; c<variables+1;  c++){
 				cin>>temp;
-				cout<<"Solo probando"<<temp<<endl; 
 				matriz[f][c] = temp;
 			}
 			
 		}
 		filas = numEcuaciones;
         columnas = variables+1;
+        MetodoPrincipal(); 
+		
 		//Hago Montante Montante miMontante(matriz, numEcuaciones, variables+1, true);
 		//Hago Montante miMontante.MetodoPrincipal();
 		//Imprimir la respuesta. 
-		if(miMontante.getSinSoluciones()){
+		if(sinSoluciones){
 			cout<<"Sin solución";
 		}else{
-			if(miMontante.getSolucionesInfinitas()){
+			if(solucionesInfinitas){
 				cout<<"Soluciones infinitas";
 			}else{
-				miMontante.calcularSolucion();
-				miMontante.imprimirSoluciones();
+				calcularSolucion();
+				imprimirSoluciones();
 			}
 		}
 		cout<<endl; 
