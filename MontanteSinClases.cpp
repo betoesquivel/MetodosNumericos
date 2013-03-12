@@ -160,7 +160,7 @@ double pivActual;
 				while(matriz[sigFila][k]==0 && sigFila<filas){
 					sigFila++;
 				}
-				if(matriz[sigFila][k]==0){
+				if(matriz[sigFila][k]==0 && k<filas){
 					//sin solución o soluciones infinitas	
 					//En matriz[k][k] tengo un pivote igual a 0 y lo mismo hacia abajo
 					//Por lo tanto tengo que comparar desde k+1 hasta columnas y desde k hasta filas
@@ -179,6 +179,16 @@ double pivActual;
 				
 			}
 		}
+		
+		void vaciarMatriz(){
+			for(int f = 0; f<filas; f++){
+				for(int c = 0; c<columnas;  c++){
+					matriz[f][c] = 0; 
+				}
+				cout<<endl; 
+			}
+			cout<<endl; 
+		}
 
 int main(){
 	int casos, variables, numEcuaciones; 
@@ -191,6 +201,9 @@ int main(){
 		cin>>numEcuaciones; 
 		
 		double temp; 
+		vaciarMatriz();
+		k = 0; 
+		pivAnterior = 1; 
 		//llenar la matriz extendida fila por fila
 		for(int f = 0; f<numEcuaciones; f++){
 			
@@ -202,6 +215,7 @@ int main(){
 		}
 		filas = numEcuaciones;
         columnas = variables+1;
+        
         MetodoPrincipal(); 
 		
 		//Hago Montante Montante miMontante(matriz, numEcuaciones, variables+1, true);
