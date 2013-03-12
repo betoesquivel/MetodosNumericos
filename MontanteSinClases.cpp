@@ -99,6 +99,52 @@ double pivActual;
 			//luego lo hago
 		}	
 		
+		void cambiarRenglonesNegativosDeSigno(){
+			//cambia de signo los renglones que sean completamente negativos
+			//-1 -2 -2 => 1 2 2 
+			//Esto facilita la comparación para ver si queda un número ilimitado de soluciones o cómo.
+			
+			for(int f = k; f<filas; f++){
+				
+				if(matriz[f][k+1]<=0){
+					int c = k+1;
+					while(c<columnas && matriz[f][c]<=0){
+						c++; 
+					}
+					if(c==columnas && matriz[f][c]<=0){
+						//multiplico todo el renglón por -1
+						for(int i = k+1; i<columnas; i++){
+							matriz[f][i] *= -1; 
+						}
+					}
+				}//fin del if que checa si el primer valor de la columna después de k es menor a 0...
+				
+			}//fin del for que recorre la matriz cambiando el signo de los renglones que son todos negativos
+				
+		}
+		
+		void compararRenglones(){
+			//compara los renglones restantes de la matriz para ver si no tiene solución o tiene soluciones infinitas
+			//ya se debió haber ejecutado el método cambiarRenglonesNegativosDeSigno
+			int f,c = k+1; 
+			while(!sinSoluciones && c<columnas){
+				f = k; 
+				while(!sinSoluciones && f<(filas-1)){
+					//compara columna por columna
+					//si una columna no es igual, se sale...
+					if(matriz[f][c]!=matriz[f+1][c]){
+						sinSoluciones = true; 
+						if(debug)
+							cout<<matriz[f][c]<<" - es diferente de - "<<matriz[f+1][c]<<endl; 
+					}
+					f++;
+				}
+				c++;
+			}
+			if(!sinSoluciones)
+				solucionesInfinitas = true; 
+		}
+		
     	void MetodoPrincipal(){
     
 			while(!sinSoluciones && !solucionesInfinitas && k<filas){
@@ -116,10 +162,19 @@ double pivActual;
 				}
 				if(matriz[sigFila][k]==0){
 					//sin solución o soluciones infinitas	
+					//En matriz[k][k] tengo un pivote igual a 0 y lo mismo hacia abajo
+					//Por lo tanto tengo que comparar desde k+1 hasta columnas y desde k hasta filas
+					//si son iguales todas, entonces tengo soluciones infinitas
+					//si no, entonces no tiene solución
 					
+					//antes de comparar tengo que hacer positivas positivas todos los renglones que sean todos negativos
+					cambiarRenglonesNegativosDeSigno();
+					compararRenglones();
+					//ya tengo el valor de los booleanos sin solucion y soluciones infinitas
 				}else{
 					//cambio el renglón k, por el renglón sigFila en la matriz	
-					cambiarRenglones(sigFila, k); 
+					if(sigFila != k)
+						cambiarRenglones(sigFila, k); 
 				}
 				
 			}
@@ -154,9 +209,11 @@ int main(){
 		//Imprimir la respuesta. 
 		if(sinSoluciones){
 			cout<<"Sin solución";
+			sinSoluciones = false; 
 		}else{
 			if(solucionesInfinitas){
 				cout<<"Soluciones infinitas";
+				solucionesInfinitas = false; 
 			}else{
 				calcularSolucion();
 				imprimirSoluciones();
