@@ -195,10 +195,9 @@ int main(){
 	cin>>casos; 
 	while(casos>0){
 	
-		cout<<"Variables: "<<endl; 
+		cout<<"Variables y ecuaciones (un número): "<<endl; 
 		cin>>variables;
-		cout<<"Ecuaciones: "<<endl;
-		cin>>numEcuaciones; 
+        numEcuaciones = variables; 
 		
 		double temp; 
 		vaciarMatriz();
