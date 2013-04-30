@@ -4,7 +4,7 @@ using namespace std;
 
 const int tamMat = 11;
 string tag = "DEBUG::";
-bool debug = true; 
+bool debug = false; 
 
 double matriz[tamMat][tamMat];
 double soluciones[tamMat];
@@ -80,7 +80,7 @@ double pivActual;
 				imprimirMatriz();
 			}			
 		}
-		 //en el caso de que se esté usando un sistema de ecuaciones lineales con montante
+		 //en el caso de que se esté usando un sistema de ecuaciones lineales con montante y quiera solución decimal.
 		void calcularSolucion(){
 			double determinante = matriz[0][0];
 			for(int f = 0; f<filas; f++){
@@ -88,7 +88,9 @@ double pivActual;
 			}
 		}
 		
+        //impresión de soluciones decimales
 		void imprimirSoluciones(){
+
 			for(int i = 0; i<filas; i++){
 				cout<<"x"<<i+1<<" = "<<soluciones[i]<<endl; 
 			}
@@ -98,6 +100,14 @@ double pivActual;
 		void calcularInversa(){
 			//luego lo hago
 		}	
+
+        void calcularSolucionesExactas(){
+            int determinante = matriz[0][0];
+            for(int f = 0; f<filas; f++){
+                cout<< matriz[f][columnas-1] << '/' << determinante << ' '; 
+            }
+            cout<<endl; 
+        }
 		
 		void cambiarRenglonesNegativosDeSigno(){
 			//cambia de signo los renglones que sean completamente negativos
@@ -185,24 +195,24 @@ double pivActual;
 				for(int c = 0; c<columnas;  c++){
 					matriz[f][c] = 0; 
 				}
-				cout<<endl; 
 			}
-			cout<<endl; 
 		}
 
 int main(){
-	int casos, variables, numEcuaciones; 
-	cin>>casos; 
-	while(casos>0){
+	int variables, numEcuaciones; 
+    cin>>variables;
+    while(variables!=0){
 	
-		cout<<"Variables y ecuaciones (un número): "<<endl; 
-		cin>>variables;
+		//cout<<"Variables y ecuaciones (un número): "<<endl; 
         numEcuaciones = variables; 
 		
 		double temp; 
 		vaciarMatriz();
 		k = 0; 
 		pivAnterior = 1; 
+
+		filas = numEcuaciones;
+        columnas = variables+1;
 		//llenar la matriz extendida fila por fila
 		for(int f = 0; f<numEcuaciones; f++){
 			
@@ -212,8 +222,6 @@ int main(){
 			}
 			
 		}
-		filas = numEcuaciones;
-        columnas = variables+1;
         
         MetodoPrincipal(); 
 		
@@ -221,19 +229,20 @@ int main(){
 		//Hago Montante miMontante.MetodoPrincipal();
 		//Imprimir la respuesta. 
 		if(sinSoluciones){
-			cout<<"Sin solución";
+			cout<<"NO UNICA"<<endl;
 			sinSoluciones = false; 
 		}else{
 			if(solucionesInfinitas){
-				cout<<"Soluciones infinitas";
+				cout<<"NO UNICA"<<endl;
 				solucionesInfinitas = false; 
 			}else{
-				calcularSolucion();
-				imprimirSoluciones();
+				//calcularSolucion();
+				//imprimirSoluciones();
+                calcularSolucionesExactas();  
 			}
 		}
-		cout<<endl; 
-		casos--; 
+		//cout<<endl; 
+		cin>>variables;
 		
 	}
 	
